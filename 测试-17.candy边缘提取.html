@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+    <meta name="Author" content="阮家友"/>
+    <meta name="Keywords" content="HTML,model,test"/>
+    <meta name="Description" content="special effect model"/>
+    <meta name="time" content="2015-9-27 10:41:48"/>
+    <meta name="renderer" content="webkit"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
+	<title>test</title>
+    <link rel="stylesheet" href="css/reset.css"/>
+    <script src="js/jquery.js"></script>
+    <script src="js/Core.js"></script>
+    <script src="js/DropImage.js"></script>
+    <script src="js/CGraph.js"></script>
+    <script src="js/CColor.js"></script>
+    <script src="js/CGraph.offset.js"></script>
+    <script src="js/CGraph.grey.js"></script>
+    <script src="js/CGraph.gauss.js"></script>
+    <script src="js/CGraph.candy.js"></script>
+    <script src="形态学/morphology.js"></script>
+    <style>
+        #center {padding:2rem;}
+    </style>
+</head>
+<body>
+    <div id="div1">
+        <div>把图片拖到这里来！</div>
+        <canvas id="oc" width="400" height="300"></canvas>
+    </div>
+<script>
+//创建reader对象
+var reader = new FileReader();
+var odiv1 = document.getElementById("div1");
+odiv1.addEventListener('dragover',function(e){
+    window.event? window.event.returnValue = false: e.preventDefault() ;
+    window.event? window.event.cancelBubble = true : e.stopPropagation();
+},false);
+odiv1.addEventListener('drop',function(e){
+    window.event? window.event.returnValue = false: e.preventDefault() ;
+    window.event? window.event.cancelBubble = true : e.stopPropagation();
+    reader.onload = function(ev){
+        //获取图片的url
+        var _img_src = ev.target.result;
+        //图片预览处理
+        showPrevImg(_img_src);
+    }
+    reader.readAsDataURL(e.dataTransfer.files[0])
+},false);
+function showPrevImg(src){
+    odiv1.innerHTML = "<div>把图片拖到这里来！</div>";
+    if(!src) src = "images/yifei3.jpg";
+    var obj = new CCanvas(NewNode("canvas")).proprety({
+        "stokeStyle": "#666",
+        "fillStyle": "#1f77b4",
+        "font": "16px Arial",
+        "textAlign": "center"
+    });
+    obj.extend("binarize",binarize);
+    odiv1.appendChild(obj.mCanvas);
+    obj.load(src,function(){
+        //this.drawLine({"x1":10,"y1":10,"x2":100,"y2":100});
+        //this.each(this.medianFilter);//.render();
+        
+        //灰化+高斯模糊
+        GaussR = 3;
+        Gs = this.getGaussArr(GaussR);
+        this.each(this.grey).each(this.rowGauss).each(this.colGauss);
+        //显示结果
+        this.appendA2B(this.createCanvas(this.mData),odiv1);
+        //梯度 压制非最大信号 边缘连接
+        this.each(Gradient).each(uMaxSignal).each(applyGradient);
+        //显示结果
+        this.appendA2B(this.createCanvas(this.mData),odiv1);
+        //
+        sum=sum/count;
+        highThreshold = sum*2;
+        lowThreshold = highThreshold/4;
+        this.each(initEdge).binarize(highThreshold);
+        //显示结果
+        this.appendA2B(this.createCanvas(this.mData),odiv1);
+    });
+}
+showPrevImg();  
+</script>
+</body>
+</html>
