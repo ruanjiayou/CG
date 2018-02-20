@@ -1,79 +1,61 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8"/>
-    <meta name="Author" content="阮家友"/>
-    <meta name="Keywords" content="HTML,model,test"/>
-    <meta name="Description" content="special effect model"/>
-    <meta name="time" content="2015-9-27 10:41:48"/>
-    <meta name="renderer" content="webkit"/>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
-	<title>test</title>
-    <link rel="stylesheet" href="css/reset.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
     <script src="js/jquery.js"></script>
     <script src="js/Core.js"></script>
-    <script src="js/CGraph.js"></script>
-    <script src="js/CColor.js"></script>
-    <style>
-        #center {padding:2rem;}
-    </style>
+    <script src="scripts/CGraph.js"></script>
+    <script src="scripts/CPoint.js"></script>
+    <script src="scripts/CGraph.shape.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
 </head>
+
 <body>
     <canvas id="oc" width="600" height="600"></canvas>
     <button id="btn1">开始</button>
     <button id="btn2">停止</button>
-<script>
-    var obj = new CCanvas("oc").proprety({
-        "stokeStyle": "#666",
-        "fillStyle": "#1f77b4",
-        "font": "16px Arial",
-        "textAlign": "center"
-    });
-    var img = new Image();
-    img.onload = function(){
-        //obj.mGC.drawImage(this,0,0);
-        //obj.mGC.save();
-    }
-    img.src = "images/yifei3.jpg";
-    var timer;
-    document.getElementById("btn1").onclick = function(){
-        var x =0,y=0,speed = {x:2,y:1};
-            timer = setInterval(function(){
-            x+=speed.x;
-            y+=speed.y;
-            if(x > obj.mWidth) speed.x = -2;
-            if(x < 0) spded.x =2;
-            if( y > obj.mHeight) speed.y = -1;
-            if( y < 0 ) speed.y = 1;
-            //console.log("x=:"+x+";y=:"+y);
-            obj.clear();
-            obj.mGC.save();
-            obj.drawCircle({"x0": x, "y0": y});
-            obj.mGC.stroke();
-            obj.mGC.clip();
-            obj.mGC.drawImage(img,0,0);
-            obj.mGC.restore();
-        },30);
-    };
-    document.getElementById("btn2").onclick = function(){
-        clearInterval(timer);
-        timer = null;
-    };
-    //obj.drawCircle({"x0": 100, "y0": 100});
-    // 在 clip() 之后绘制绿色矩形
-    //obj.mGC.fillStyle="green";
-    //obj.mGC.fillRect(0,0,150,100);
-    // 剪切矩形区域
-    //obj.mGC.rect(0,0,200,120);
-    //obj.mGC.stroke();
-    //obj.mGC.clip();
-    //// 在 clip() 之后绘制绿色矩形
-    //obj.mGC.fillStyle="green";
-    //obj.mGC.fillRect(0,0,300,200);
-    //obj.load("images/yifei3.jpg",function(){
-    //    
-    //});
-</script>
+    <script>
+        var graph = new CGraph('oc');
+        var img = new Image();
+        img.src = 'images/yifei3.jpg';
+        graph.load('images/yifei3.jpg', function () {
+            var x = 0, y = 0, speed = { x: 2, y: 1 };
+            this.run(function () {
+                if (x > this.mWidth) {
+                    speed.x = -2;
+                }
+                if (x < 0) {
+                    speed.x = 2;
+                }
+                if (y > this.mHeight) {
+                    speed.y = -1;
+                }
+                if (y < 0) {
+                    speed.y = 1;
+                }
+                x += speed.x;
+                y += speed.y;
+                this.clear();
+                this.mGC.save();
+                this.mGC.beginPath();
+                this.mGC.arc(x, y, 100, 0, Math.PI * 2, true);
+                this.mGC.closePath();
+                this.mGC.clip();
+                this.mGC.drawImage(img, 0, 0);
+                this.mGC.restore();
+            });
+        });
+    </script>
 </body>
+
 </html>

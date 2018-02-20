@@ -1,45 +1,51 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8"/>
-    <meta name="Author" content="阮家友"/>
-    <meta name="Keywords" content="HTML,model,test"/>
-    <meta name="Description" content="special effect model"/>
-    <meta name="time" content="2015-9-27 10:41:48"/>
-    <meta name="renderer" content="webkit"/>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
-	<title>test</title>
-    <link rel="stylesheet" href="css/reset.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
     <script src="js/jquery.js"></script>
     <script src="js/Core.js"></script>
     <script src="js/DropImage.js"></script>
-    <script src="js/CGraph.js"></script>
-    <script src="js/CColor.js"></script>
-    <script src="js/CGraph.comics.js"></script>
-    <style>
-        #center {padding:2rem;}
-    </style>
+    <script src="scripts/CGraph.js"></script>
+    <script src="scripts/CGraph.comics.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
 </head>
+
 <body>
-    <p>使用DropImage</p>
-    <div id="div1">把图片拖到这里来！ </div>
-   
-<script>
-DropImage({
-    selector: "#div1",
-    callback: showPrevImg
-})
-function showPrevImg(src){
-    var odiv1 = this;
-    odiv1.innerHTML = "<div>把图片拖到这里来！</div>";
-    var obj = new CCanvas(NewNode("canvas"));
-    obj.load(src,function(){
-        this.each(this.comics);
-        this.appendA2B(this.createCanvas(this.mData),odiv1);
-    });
-}
-showPrevImg.call(document.getElementById("div1"),"images/yifei3.jpg");
-</script>
+    <div class="info">把图片拖到这里来！</div>
+    <script>
+        // 右键删除
+        Event.addEvent(document.body, 'contextmenu', function (evt) {
+            let o = evt.target;
+            if (o.nodeName.toLowerCase() === 'canvas') {
+                o.parentNode.removeChild(o);
+            }
+        });
+        // 拖拽效果
+        DropImage({
+            selector: ".info",
+            callback: function (src) {
+                new CGraph()
+                    .appendTo()
+                    .load(src, function () {
+                        this
+                            .clone()
+                            .comics()
+                            .render()
+                            .appendTo();
+                    });
+            }
+        });
+    </script>
 </body>
+
 </html>

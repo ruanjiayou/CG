@@ -1,0 +1,11 @@
+.info {
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background-color: rgb(52, 127, 212);
+}
+canvas {
+    border: 1px solid #ccc;
+    display: block;
+    max-width: 100%;
+}

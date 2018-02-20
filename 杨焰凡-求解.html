@@ -28,17 +28,20 @@
         "font": "16px Arial",
         "textAlign": "center"
     });
-    //obj.load("images/yifei3.jpg",function(){
-    //    //this.drawLine({"x1":10,"y1":10,"x2":100,"y2":100});
-    //    //this.each(this.medianFilter);//.render();
-    //    
-    //    this.each(this.medianFilterRow);
-    //    
-    //    var onew = NewNode("canvas",{"width": this.mWidth, "height": this.mHeight });
-    //    onew.getContext("2d").putImageData(this.mData,0,0);
-    //    document.body.appendChild(onew);
-    //});
-    obj.fillRing(100,100,30,50);
+    obj.load("images/yifei3.jpg",function(){
+        //this.drawLine({"x1":10,"y1":10,"x2":100,"y2":100}).this.each(this.medianFilter).render();
+        
+    });
+    // 只能2位小数
+    var times = 0;
+    for(var x = 0; x<=2500; x+=0.01) {
+        var y = (3544230 - 1087.8*x)/821.4;
+        times++;
+        if(y*100-Math.floor(y*100)==0){
+            console.log('x='+x.toFixed(2)+',y='+y);
+        }
+    }
+    console.log(times);
 </script>
 </body>
 </html>

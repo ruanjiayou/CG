@@ -46,10 +46,10 @@ CCanvas.prototype.init = function (obj) {
     this.mHeight = this.mCanvas.height;
     this.mData = this.mGC.createImageData(this.mWidth,this.mHeight);
     for (var i=0;i<this.mData.data.length;i+=4){
-        this.mData.data[i+0]=0;
-        this.mData.data[i+1]=0;
-        this.mData.data[i+2]=0;
-        this.mData.data[i+3]=0;
+        this.mData.data[i+0]=255;
+        this.mData.data[i+1]=255;
+        this.mData.data[i+2]=255;
+        this.mData.data[i+3]=255;
     }
     this.mGC.putImageData(this.mData,0,0);
     //原点必须在canvas内
@@ -73,6 +73,13 @@ CCanvas.prototype.load = function(url,fn){
     }
     img.src = url;
 }
+CCanvas.prototype.getData = function(){
+    return this.mGC.getImageData(0, 0, this.mWidth, this.mHeight);
+}
+CCanvas.prototype.putData = function(data){
+    this.mGC.putImageData(data, 0, 0);
+    return this;
+}
 //清空画布
 CCanvas.prototype.clear = function () {
     this.mGC.clearRect(0, 0, this.mWidth, this.mHeight);
@@ -80,8 +87,9 @@ CCanvas.prototype.clear = function () {
 // 根据自身创建画布 如果有data则draw
 CCanvas.prototype.createCanvas = function(data){
     var blank = NewNode("canvas",{"width": this.mWidth, "height": this.mHeight });
-    if(data) blank.getContext("2d").putImageData(data,0,0);
-    return blank;
+    var res = new CCanvas(blank)
+    if(data) res.putData(data);
+    return res;
 }
 CCanvas.prototype.appendTo = function(obj){
     if(!obj) obj = document.body;
@@ -439,6 +447,9 @@ CCanvas.prototype.fillRing = function(x,y,r1,r2){
 CCanvas.prototype.drawLine_bresenham = function(json){
     var x1 = json.x1,x2 = json.x2,y1 = json.y1,y2 = json.y2;
     var dx = Math.abs(x2-x1),dy = Math.abs(y2-y1),gt45 = false,color = { R: 255, G: 0, B: 0 };
+    //保存老样式
+    var old_stroke_style = this.mGC.strokeStyle;
+    this.mGC.strokeStyle = '#f00';
     if(dx < dy){
         x1 = x1^y1, y1 = x1^y1, x1 = x1^y1;
         x2 = x2^y2, y2 = x2^y2, x2 = x2^y2;
@@ -460,32 +471,40 @@ CCanvas.prototype.drawLine_bresenham = function(json){
         }
         //TODO 点着色
         if(gt45){
-            this.setRGB(y1,x1,color);
+            //this.setRGB(y1,x1,color);
+            this.drawLine({ x1: y1, y1: x1, x2: y1, y2: x1});
         }
         else{
-            this.setRGB(x1,y1,color);
+            //this.setRGB(x1,y1,color);
+            this.drawLine({ x1: x1, y1: y1, x2: x1, y2: y1});
         }
         x1+=ix;
     }
+    //样式还原
+    this.mGC.strokeStyle = old_stroke_style;
 }
-CCanvas.prototype._draw_circle_8 = function(x0,y0,x,y,color){
-    this.setRGB(x0+x,y0+y,color);
-    this.setRGB(x0-x,y0+y,color);
-    this.setRGB(x0+x,y0-y,color);
-    this.setRGB(x0-x,y0-y,color);
-    this.setRGB(x0+y,y0+x,color);
-    this.setRGB(x0-y,y0+x,color);
-    this.setRGB(x0+y,y0-x,color);
-    this.setRGB(x0-y,y0-x,color);
+CCanvas.prototype._draw_circle_8 = function(x0,y0,x,y){
+    var arr = [];
+    arr.push({ 'x1': x0+x, 'y1': y0+y, 'x2': x0+x, 'y2': y0+y});
+    arr.push({ 'x1': x0-x, 'y1': y0+y, 'x2': x0-x, 'y2': y0+y});
+    arr.push({ 'x1': x0+x, 'y1': y0-y, 'x2': x0+x, 'y2': y0-y});
+    arr.push({ 'x1': x0-x, 'y1': y0-y, 'x2': x0-x, 'y2': y0-y});
+    arr.push({ 'x1': x0+x, 'y1': y0+y, 'x2': x0+x, 'y2': y0+y});
+    arr.push({ 'x1': x0-x, 'y1': y0+y, 'x2': x0-x, 'y2': y0+y});
+    arr.push({ 'x1': x0+x, 'y1': y0-y, 'x2': x0+x, 'y2': y0-y});
+    arr.push({ 'x1': x0-x, 'y1': y0-y, 'x2': x0-x, 'y2': y0-y});
+    this.drawLine(arr);
 }
 CCanvas.prototype.drawCircle_bresenham = function(x0,y0,r,color){
+    var old_stroke_style = this.mGC.strokeStyle;
+    this.mGC.strokeStyle = 'rgb('+ color.R + ',' + color.G + ',' + color.B +')';
     //在区域外 直接退出
     if(x0+r<0 || x0 - r>= this.mWidth || y0 + r < 0 || y0 - r >= this.mHeight){
         return;
     }
     var x=0,y=r,yi,d=3-2*r;
     while(x<=y){
-        this._draw_circle_8(x0,y0,x,y,color);
+        this._draw_circle_8(x0,y0,x,y);
         if(d<0){
             d=d+4*x+6;
         }
@@ -495,6 +514,7 @@ CCanvas.prototype.drawCircle_bresenham = function(x0,y0,r,color){
         }
         x++;
     }
+    this.mGC.strokeStyle = old_stroke_style;
 }
 CCanvas.prototype.fillCircle_bresenham = function(x0,y0,r,color){
     //在区域外 直接退出
@@ -504,7 +524,7 @@ CCanvas.prototype.fillCircle_bresenham = function(x0,y0,r,color){
     var x=0,y=r,yi,d=3-2*r;
     while(x<=y){
         for(yi=x;yi<=y;yi++){
-            this._draw_circle_8(x0,y0,x,yi,color);
+            this._draw_circle_8(x0,y0,x,yi);
         }
         if(d<0){
             d=d+4*x+6;

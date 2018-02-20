@@ -18,8 +18,4 @@ CCanvas.prototype.sketch = function(){
         this.mData.data[i] = this.limit(ex*temp);
     }
     return this.mData;
-    var onew = NewNode("canvas",{"width": this.mWidth, "height": this.mHeight });
-    document.body.appendChild(onew);
-    onew.getContext("2d").putImageData(this.mData,0,0);
-    //this.render();
 }

@@ -32,10 +32,18 @@ CCanvas.prototype.GetHoughLine = function(){
                 else HoughAngleRArr[u][r] +=1;
             }
     });
+    function isSimilar(arr, angle, r){
+        for(var i=0;i<arr.length;i++){
+            if(Math.abs(arr[i].angle-angle) < 3 && Math.abs(arr[i].R - r) < 3){
+                return true;
+            }
+        }
+        return false;
+    }
     //寻找hough阈值
     for(var i=0;i<AgnleUnit;i++){
         for(var j=0;j<2*Diagonal;j++){
-            if(Valve<HoughAngleRArr[i][j])
+            if(Valve<HoughAngleRArr[i][j] && false === isSimilar(HoughArr, i, j-Diagonal))
                 HoughArr.push({"angle": i, "value": HoughAngleRArr[i][j], "R": j-Diagonal });
         }
     }
@@ -48,13 +56,6 @@ CCanvas.prototype.GetHoughLine = function(){
             }
         }
     });
-    //for(var i=0;i<HoughArr.length;i++){
-    //    //l*cos(b) = r
-    //    //ax+by+c=0 y=c/b x=c/a d=r=c/√aa+bb = c/b√kk+1 ---> y0 = r/√kk+1
-    //    //this.drawLine({"x0": 0, "y0": HoughArr[i].R/Math.sqrt(Math.tan(HoughArr[i].angle*unit)*Math.tan(HoughArr[i].angle*unit)+1)})
-    //}
-    var onew = NewNode("canvas",{"width": this.mWidth, "height": this.mHeight });
-    onew.getContext("2d").putImageData(this.mData,0,0);
-    document.body.appendChild(onew);
+    this.createCanvas(this.mData).appendTo();
     return HoughArr;
 }

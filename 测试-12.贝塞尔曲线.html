@@ -1,42 +1,53 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8"/>
-    <meta name="Author" content="阮家友"/>
-    <meta name="Keywords" content="HTML,model,test"/>
-    <meta name="Description" content="special effect model"/>
-    <meta name="time" content="2015-9-27 10:41:48"/>
-    <meta name="renderer" content="webkit"/>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
-	<title>test</title>
-    <link rel="stylesheet" href="css/reset.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
     <script src="js/jquery.js"></script>
     <script src="js/Core.js"></script>
-    <script src="js/CGraph.js"></script>
-    <script src="js/CColor.js"></script>
-    <style>
-        #center {padding:2rem;}
-    </style>
+    <script src="scripts/CGraph.js"></script>
+    <script src="scripts/CGraph.bezier.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
 </head>
+
 <body>
-    <canvas id="oc" width="400" height="300"></canvas>
-<script>
-    var obj = new CCanvas("oc").proprety({
-        "stokeStyle": "#666",
-        "fillStyle": "#1f77b4",
-        "font": "16px Arial",
-        "textAlign": "center"
-    });
-    //obj.load("images/yifei3.jpg",function(){
-    //    //this.drawLine({"x1":10,"y1":10,"x2":100,"y2":100});
-    //    //this.each(this.medianFilter);//.render();
-    //    
-    //    
-    //    
-    //});
-    var area = [{x:23,y:23},{x:68,y:40},{x:95,y:34},{x:120,y:22},{x:162,y:13},{x:173,y:28},{x:174,y:45},{x:153,y:57},{x:149,y:68},{x:155,y:84},{x:166,y:104},{x:155,y:122},{x:135,y:138},{x:108,y:143},{x:96,y:142},{x:96,y:126},{x:83,y:111},{x:66,y:93},{x:44,y:72},{x:30,y:54},{x:16,y:43}];
-    obj.fillPolygon(area);
-</script>
+    <script>
+        var area = [
+            [23, 23],
+            [68, 40],
+            [95, 34],
+            [120, 22],
+            [162, 13],
+            [173, 28],
+            [174, 45],
+            [153, 57],
+            [149, 68],
+            [155, 84],
+            [166, 104],
+            [155, 122],
+            [135, 138],
+            [108, 143],
+            [96, 142],
+            [96, 126],
+            [83, 111],
+            [66, 93],
+            [44, 72],
+            [30, 54],
+            [16, 43]
+        ];
+        var graph = new CGraph().appendTo();
+        graph.setFillStyle('#1f77b4');
+        graph.drawBezier(area);
+    </script>
 </body>
+
 </html>

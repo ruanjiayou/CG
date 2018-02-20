@@ -1,44 +1,56 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8"/>
-    <meta name="Author" content="阮家友"/>
-    <meta name="Keywords" content="HTML,model,test"/>
-    <meta name="Description" content="special effect model"/>
-    <meta name="time" content="2015-9-27 10:41:48"/>
-    <meta name="renderer" content="webkit"/>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
-	<title>test</title>
-    <link rel="stylesheet" href="css/reset.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
     <script src="js/jquery.js"></script>
     <script src="js/Core.js"></script>
-    <script src="js/CGraph.js"></script>
-    <script src="js/CColor.js"></script>
-    <style>
-        #center {padding:2rem;}
-    </style>
+    <script src="js/DropImage.js"></script>
+    <script src="scripts/CGraph.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
 </head>
+
 <body>
-    <canvas id="oc" width="400" height="300"></canvas>
-<script>
-    var obj = new CCanvas("oc").proprety({
-        "stokeStyle": "#666",
-        "fillStyle": "#1f77b4",
-        "font": "16px Arial",
-        "textAlign": "center"
-    });
-    obj.load("images/code.png",function(){
-        //this.drawLine({"x1":10,"y1":10,"x2":100,"y2":100}).this.each(this.medianFilter).render();
-        this.each(function(x,y){
-            var o = this.getRGB(x,y);
-            //o.G = 0;
-            //o.B = 0;
-            o.R = o.R%2===0 ? o.R : 50;
-             this.setRGB(x,y,o);
+    <div class="info">把图片拖到这里来！</div>
+    <script>
+        // 右键删除
+        Event.addEvent(document.body, 'contextmenu', function (evt) {
+            let o = evt.target;
+            if (o.nodeName.toLowerCase() === 'canvas') {
+                o.parentNode.removeChild(o);
+            }
         });
-        this.appendA2B(this.createCanvas(this.mData),document.body);
-    });
-</script>
+        // 拖拽效果
+        DropImage({
+            selector: ".info",
+            callback: cb
+        });
+        function cb(src) {
+            new CGraph()
+                .appendTo()
+                .load(src, function () {
+                    this
+                        .clone()
+                        .each(function (x, y) {
+                            let o = this.getPoint(x, y);
+                            o.R = o.R % 2 === 0 ? o.R : 50;
+                            this.setPoint(x, y, o);
+                        })
+                        .render()
+                        .appendTo();
+                });
+        }
+        cb('images/code.png');
+    </script>
 </body>
+
 </html>
