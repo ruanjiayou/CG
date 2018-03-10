@@ -2,6 +2,8 @@
  * 作者: 阮家友
  * 时间: 
  */
+import CGraph from './CGraph';
+
 ; (function (o) {
     function isSimilar(arr, angle, r) {
         for (var i = 0; i < arr.length; i++) {

@@ -1,31 +1,53 @@
 /**
-×÷Õß£ºÈî¼ÒÓÑ
-Ê±¼ä£º2017-4-11 22:29:01
-ËµÃ÷£ºÍÏ×§Í¼Æ¬²¢Ö´ĞĞ»Øµ÷º¯Êı
+ä½œè€…ï¼šé˜®å®¶å‹
+æ—¶é—´ï¼š2017-4-11 22:29:01
+è¯´æ˜ï¼šæ‹–æ‹½å›¾ç‰‡å¹¶æ‰§è¡Œå›è°ƒå‡½æ•°
 
 **/
-function DropImage(data){
+function DropImage(data) {
     var config = {
-        selector: "",
+        selector: '',
         callback: null
-    }
-    for(var k in data) config[k] = data[k];
+    };
+    for (var k in data) config[k] = data[k];
     var reader = new FileReader();
     var obj = $(config.selector);
-    obj.on("dragover",function(e){
-        window.event? window.event.returnValue = false: e.preventDefault() ;
-        window.event? window.event.cancelBubble = true : e.stopPropagation();
+    // æ‹–åŠ¨é€‰å›¾ç‰‡
+    obj.on('dragover', function (e) {
+        window.event ? window.event.returnValue = false : e.preventDefault();
+        window.event ? window.event.cancelBubble = true : e.stopPropagation();
     });
-    obj.on("drop",function(e){
-        window.event? window.event.returnValue = false: e.preventDefault() ;
-        window.event? window.event.cancelBubble = true : e.stopPropagation();
-        var e = e.originalEvent;
-        reader.onload = function(ev){
-            //»ñÈ¡Í¼Æ¬µÄurl
+    obj.on('drop', function (e) {
+        window.event ? window.event.returnValue = false : e.preventDefault();
+        window.event ? window.event.cancelBubble = true : e.stopPropagation();
+        e = e.originalEvent;
+        reader.onload = function (ev) {
+            //è·å–å›¾ç‰‡çš„url
             var _img_src = ev.target.result;
-            //Í¼Æ¬Ô¤ÀÀ´¦Àí
-            if(config.callback) config.callback.call(obj[0],_img_src);
-        }
+            //å›¾ç‰‡é¢„è§ˆå¤„ç†
+            if (config.callback) config.callback.call(obj[0], _img_src);
+        };
         reader.readAsDataURL(e.dataTransfer.files[0]);
+    });
+    // å•å‡»é€‰å›¾ç‰‡
+    obj.click(function () {
+        var oinput = document.createElement('input');
+        oinput.type = 'file';
+        oinput.style = 'display:none;';
+        document.body.appendChild(oinput);
+        oinput.onchange = function () {
+            var oFReader = new FileReader();
+            oFReader.readAsDataURL(oinput.files[0]);
+            if (oinput.files.length !== 0) {
+                oFReader.onload = function (oFREvent) {
+                    // å›¾ç‰‡è·¯å¾„
+                    var path = oFREvent.target.result;
+                    if (config.callback)
+                        config.callback.call(obj[0], path);
+                    document.body.removeChild(oinput);
+                };
+            }
+        };
+        oinput.click();
     });
 }

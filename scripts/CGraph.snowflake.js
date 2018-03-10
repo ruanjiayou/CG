@@ -2,6 +2,8 @@
  * 作者: 阮家友
  * 时间: 2018-2-18 15:36:18
  */
+import CGraph from './CGraph';
+
 ; (function (o) {
     o.extend({
         'snowflake': function () {

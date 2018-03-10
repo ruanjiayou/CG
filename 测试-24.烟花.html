@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/DropImage.js"></script>
+    <script src="js/Core.js"></script>
+    <script src="dist/bundle.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
+</head>
+
+<body>
+    <div class="info">单击选择图片,或把图片拖到这里来！</div>
+    <script>
+        let global = {
+            // 时间
+            t: 0
+        };
+        // 绘画系统
+        let gs = new CGraph().appendTo().setSize(600, 500);
+        //gs.setFillStyle('rgba(0,0,0)');
+        //gs.mGC.fillRect(0, 0, gs.mWidth, gs.mHeight);
+        // 粒子系统
+        let ps = new CParticleSystem();
+        // 粒子按时间变换
+        CParticleSystem.extend({
+            'create': function (pos, v, age, color, birth, expoded) {
+                // 随机位置 颜色 大小 记录时间戳
+                let p = new CParticle();
+                p.g = -10;
+                p.expoded = expoded === undefined ? false : true;
+                // 画布下方
+                p.position = pos || new CPoint(Math.random() * 450 + 50 + 0.5, 500 + Math.random() * 50);
+                // 初速度
+                //p.velocity = new CPoint(-5, 15);
+                p.velocity = v || new CPoint(0, Math.random() * 10 + 30);
+                // 0.6-0.7
+                p.life = 3 * 1000;
+                p.expode = p.life * 0.5;
+                p.age = age || 0;
+                // 色相随机
+                p.color = color || `hsla(${Math.random() * 360},100%,50%,1)`;
+                p.birth = birth || new Date().getTime();
+                this.particles.push(p);
+                return p;
+            },
+            'aging': function () {
+                let t = new Date().getTime();
+                this.each(function (p) {
+                    // 速度受重力加速度影响
+                    let dt = (t - p.birth - p.age) / 1000;
+                    p.velocity.y += dt * p.g;
+                    p.position.y -= p.velocity.y * dt * 8;
+                    p.position.x += p.velocity.x * dt * 8;
+                    // age延迟计算
+                    p.age = t - p.birth;
+                    // 是否炸裂 rising->expoding
+                    if (p.expoded === false && p.age > p.expode) {
+                        for (let i = 0; i < 30; i++) {
+                            let temp = this.create(
+                                p.position.copy(),
+                                new CPoint(Math.random() * 10 - 5, Math.random() * 5 + 3),
+                                p.age,
+                                p.color,
+                                p.birth,
+                                true);
+                        }
+                    }
+                });
+            },
+            'death': function () {
+                let t = new Date().getTime();
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    let p = this.particles[i]
+                    if (p.age > p.life || (p.expoded === false && p.age > p.expode)) {
+                        this.particles.splice(i, 1);
+                    }
+                }
+            }
+        });
+        gs.run(function () {
+            this.setFillStyle('rgba(0,0,0,0.1)');
+            this.mGC.fillRect(0, 0, this.mWidth, this.mHeight);
+            // 创建粒子
+            if (ps.particles.length < 5) {
+                ps.create();
+            }
+            // 粒子衰老
+            ps.aging();
+            // 粒子死亡
+            ps.death();
+            for (let i = 0; i < ps.particles.length; i++) {
+                let p = ps.particles[i];
+                this.setFillStyle(p.color);
+                this.fillCircle(p.position, 3);
+
+            }
+        });
+        // 键盘时间交互
+        document.onkeydown = function (evt) {
+            evt = (evt) ? evt : window.event;
+            switch (evt.keyCode) {
+                case 32:
+                    if (gs.stop) {
+                        gs.start();
+                    } else {
+                        gs.pause();
+                    }
+                    break;
+                default: break;
+            }
+            // evt.ctrlKey 
+            // if (evt.preventDeault)
+            //     evt.preventDeault();
+            // else
+            //     evt.returnValue = false;
+            // return false;
+        }
+    </script>
+</body>
+
+</html>

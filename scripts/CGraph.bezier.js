@@ -2,7 +2,9 @@
  * 作者: 阮家友
  * 时间: 2018-2-18 12:29:07
  */
-; (function (o) {
+import CGraph from './CGraph';
+
+; (function () {
     /**
      * 给定两点和两控制点生成一段贝塞尔曲线点
      * @param {object} startPoint - 起点
@@ -40,7 +42,7 @@
         }
         return points;
     }
-    o.extend({
+    CGraph.extend({
         /**
          * 点是否在点数组围成的多边形内
          */
@@ -93,4 +95,4 @@
             return this;
         }
     });
-})(CGraph);
+})();

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/DropImage.js"></script>
+    <script src="js/Core.js"></script>
+    <script src="dist/bundle.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
+</head>
+
+<body>
+    <canvas id="oc" width="800" height="600" style="background-color: black"></canvas>
+    <script>
+        let g = new CGraph('oc');
+        let degree = 0, p = new CPoint(400, 300);
+        g.setStrokeStyle('rgba(0,0,0,1)');
+        g.setFillStyle('#4689bd');
+        g.run(function () {
+            degree += 2;
+            this.clear();
+            // 一环
+            this.fillRing(p, 60, 65);
+            this.mGC.lineWidth = 10;
+            this.mGC.save();
+            this.mGC.translate(p.x, p.y);
+            this.mGC.rotate(Math.PI * degree / 180);
+            for (let i = 0; i < 2; i++) {
+                this.mGC.rotate(Math.PI / 2);
+                this.drawLine({ x: 0, y: -66 }, { x: 0, y: 65 });
+            }
+            this.mGC.restore();
+            // 二环
+            this.fillRing(p, 40, 50);
+            this.mGC.lineWidth = 5;
+            this.mGC.save();
+            this.mGC.translate(p.x, p.y);
+            this.mGC.rotate(-Math.PI * degree / 180);
+            for (let i = 0; i < 4; i++) {
+                this.mGC.rotate(Math.PI / 4);
+                this.drawLine({ x: 0, y: -50 }, { x: 0, y: 50 });
+            }
+            this.mGC.restore();
+            // 三环
+            this.fillRing(p, 20, 35);
+            this.mGC.lineWidth = 2;
+            this.mGC.save();
+            this.mGC.translate(p.x, p.y);
+            this.mGC.rotate(Math.PI * degree / 180);
+            for (let i = 0; i < 24; i++) {
+                this.mGC.rotate(Math.PI / 12);
+                this.drawLine({ x: 0, y: -35 }, { x: 0, y: 35 });
+            }
+            this.mGC.restore();
+        });
+        // 键盘
+        document.onkeydown = function (evt) {
+            evt = (evt) ? evt : window.event;
+            // 暂停与控制方向
+            switch (evt.keyCode) {
+                case 32: g.stop = !g.stop; break;
+                case 37: p.x -= 3; break;
+                case 38: p.y -= 3; break;
+                case 39: p.x += 3; break;
+                case 40: p.y += 3; break;
+                default: return;
+            }
+            if (evt.preventDeault)
+                evt.preventDeault();
+            else
+                evt.returnValue = false;
+            return false;
+        }
+    </script>
+</body>
+
+</html>

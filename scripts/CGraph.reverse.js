@@ -2,6 +2,8 @@
  * 作者: 阮家友
  * 时间: 2018-2-16 20:03:32
  */
+import CGraph from './CGraph';
+
 ; (function (obj) {
     obj.extend({
         'reverse': function () {

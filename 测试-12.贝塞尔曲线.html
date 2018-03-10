@@ -14,13 +14,13 @@
     <title>test</title>
     <script src="js/jquery.js"></script>
     <script src="js/Core.js"></script>
-    <script src="scripts/CGraph.js"></script>
-    <script src="scripts/CGraph.bezier.js"></script>
+    <script src="dist/bundle.js"></script>
     <link rel="stylesheet" href="./styles/common.css" />
 </head>
 
 <body>
     <script>
+        console.log(Object.keys(CGraph.prototype));
         var area = [
             [23, 23],
             [68, 40],
@@ -47,6 +47,48 @@
         var graph = new CGraph().appendTo();
         graph.setFillStyle('#1f77b4');
         graph.drawBezier(area);
+        graph.addEvent('contextmenu', function (e) {
+            let p = this.window2canvas(e.clientX, e.clientY);
+            console.log(p);
+        });
+        // 鼠标画线
+        ; (function () {
+            let p0 = null;
+            graph.addEvent('mousedown', function (e) {
+                p0 = this.window2canvas(e.clientX, e.clientY);
+            });
+            graph.addEvent('mouseout', function (e) {
+                p0 = null;
+            });
+            graph.addEvent('mouseup', function (e) {
+                p0 = null;
+            });
+            graph.addEvent('mousemove', function (e) {
+                if (p0) {
+                    let p = this.window2canvas(e.clientX, e.clientY);
+                    this.drawLine(p0, p);
+                    p0 = p;
+                }
+            });
+        })();
+        // 键盘
+        document.onkeydown = function (evt) {
+            evt = (evt) ? evt : window.event;
+            switch (evt.keyCode) {
+                //case '': break;
+                default:
+                    graph.clear();
+                    graph.drawBezier(area);
+                    graph.drawText(evt.keyCode.toString(), { x: 10, y: 20 });
+                    break;
+            }
+            // evt.ctrlKey 
+            // if (evt.preventDeault)
+            //     evt.preventDeault();
+            // else
+            //     evt.returnValue = false;
+            // return false;
+        }
     </script>
 </body>
 

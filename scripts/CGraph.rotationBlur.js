@@ -2,6 +2,8 @@
  * 作者: 阮家友
  * 时间: 2018-2-20 00:05:31
  */
+import CGraph from './CGraph';
+
 ; (function (o) {
     o.extend({
         'rotationBlur': function (angel) {

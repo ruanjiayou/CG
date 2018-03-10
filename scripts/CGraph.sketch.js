@@ -3,6 +3,8 @@
  * 时间: 2018-2-17 21:50:22
  * 描述: 公式：基色+（基色×混合色）/（255-混合色）=结果色
  */
+import CGraph from './CGraph';
+
 ; (function (o) {
     o.extend({
         'sketch': function (r) {

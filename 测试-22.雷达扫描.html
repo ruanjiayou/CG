@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/DropImage.js"></script>
+    <script src="js/Core.js"></script>
+    <script src="dist/bundle.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
+</head>
+
+<body>
+    <canvas id="oc" width="400" height="300"></canvas>
+    <script>
+        let graph = new CGraph('oc').appendTo();
+        graph.setStrokeStyle('#72d6fc');
+        graph.mGC.lineCap = 'round';
+        let center = new CPoint(graph.mWidth / 2, graph.mHeight / 2);
+        // 动画
+        ; (function () {
+            let r = 0, degree = 0, R = graph.D(center.x, center.y);
+            graph.run(function (e) {
+                r++;
+                degree++;
+                if (r > R) {
+                    r = 0;
+                }
+                graph.setFillStyle('rgba(0,0,0,0.03)');
+                graph.mGC.fillRect(0, 0, graph.mWidth, graph.mHeight);
+                graph.setFillStyle('#72d6fc');
+                //扩散波动圆
+                graph.fillRing(center, r, r + 2);
+                //旋转扫描线
+                graph.mGC.lineWidth = 4;
+                graph.mGC.save();
+                graph.mGC.translate(center.x, center.y);
+                graph.mGC.rotate(degree * Math.PI / 180);
+                graph.drawLine({ x: 0, y: 0 }, { x: graph.mWidth, y: graph.mHeight });
+                graph.mGC.restore();
+                //网格线
+                graph.mGC.lineWidth = 1;
+                for (let i = 0; i < graph.mWidth; i += 30) {
+                    graph.drawLine({ x: i, y: 0 }, { x: i, y: graph.mHeight });
+                }
+                for (let i = 0; i < graph.mHeight; i += 30) {
+                    graph.drawLine({ x: 0, y: i }, { x: graph.mWidth, y: i });
+                }
+            });
+        })();
+
+        // 键盘
+        document.onkeydown = function (evt) {
+            evt = (evt) ? evt : window.event;
+            switch (evt.keyCode) {
+                case 32:
+                    graph.stop === true ? graph.start() : graph.pause();
+                    break;
+                default: break;
+            }
+        }
+    </script>
+</body>
+
+</html>

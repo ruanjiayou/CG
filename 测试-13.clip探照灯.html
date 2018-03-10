@@ -14,47 +14,76 @@
     <title>test</title>
     <script src="js/jquery.js"></script>
     <script src="js/Core.js"></script>
-    <script src="scripts/CGraph.js"></script>
-    <script src="scripts/CPoint.js"></script>
-    <script src="scripts/CGraph.shape.js"></script>
+    <script src="dist/bundle.js"></script>
     <link rel="stylesheet" href="./styles/common.css" />
 </head>
 
 <body>
     <canvas id="oc" width="600" height="600"></canvas>
-    <button id="btn1">开始</button>
-    <button id="btn2">停止</button>
     <script>
         var graph = new CGraph('oc');
         var img = new Image();
+        let p0 = null;//鼠标按下的点坐标
+        let speed = new CPoint(2, 1);//自动移动速度矢量
         img.src = 'images/yifei3.jpg';
         graph.load('images/yifei3.jpg', function () {
-            var x = 0, y = 0, speed = { x: 2, y: 1 };
+            // 按下鼠标时探照灯的中心就是鼠标所在位置
+            // 松开鼠标时探照灯自动移动
+            let pc = new CPoint()// 探照灯中点坐标
             this.run(function () {
-                if (x > this.mWidth) {
-                    speed.x = -2;
+                if (p0 === null) {
+                    speed.x = pc.x > this.mWidth ? -2 : (pc.x < 0 ? 2 : speed.x);
+                    speed.y = pc.y > this.mHeight ? -1 : (pc.y < 0 ? 1 : speed.y);
+                    pc.add(speed);
+                } else {
+                    pc.copy(p0);
                 }
-                if (x < 0) {
-                    speed.x = 2;
-                }
-                if (y > this.mHeight) {
-                    speed.y = -1;
-                }
-                if (y < 0) {
-                    speed.y = 1;
-                }
-                x += speed.x;
-                y += speed.y;
                 this.clear();
                 this.mGC.save();
                 this.mGC.beginPath();
-                this.mGC.arc(x, y, 100, 0, Math.PI * 2, true);
+                this.mGC.arc(pc.x, pc.y, 100, 0, Math.PI * 2, true);
                 this.mGC.closePath();
                 this.mGC.clip();
                 this.mGC.drawImage(img, 0, 0);
                 this.mGC.restore();
             });
         });
+        // 鼠标控制点
+        ; (function () {
+            graph.addEvent('mousedown', function (e) {
+                p0 = this.window2canvas(e.clientX, e.clientY);
+            });
+            graph.addEvent('mouseout', function (e) {
+                p0 = null;
+            });
+            graph.addEvent('mouseup', function (e) {
+                p0 = null;
+            });
+            graph.addEvent('mousemove', function (e) {
+                if (p0) {
+                    let p = this.window2canvas(e.clientX, e.clientY);
+                    p0 = p;
+                }
+            });
+        })();
+        // 键盘
+        document.onkeydown = function (evt) {
+            evt = (evt) ? evt : window.event;
+            // 暂停与控制方向
+            switch (evt.keyCode) {
+                case 32: graph.stop = !graph.stop; break;
+                case 37: speed.x = -2; break;
+                case 38: speed.y = -1; break;
+                case 39: speed.x = 2; break;
+                case 40: speed.y = 1; break;
+                default: break;
+            }
+            if (evt.preventDeault)
+                evt.preventDeault();
+            else
+                evt.returnValue = false;
+            return false;
+        }
     </script>
 </body>
 

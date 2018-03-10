@@ -2,7 +2,9 @@
  * 作者: 阮家友
  * 时间: 2018-2-18 17:08:13
  */
-; (function (o) {
+import CGraph from './CGraph';
+
+; (function () {
     var CANDY_X = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
     var CANDY_Y = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
     function edgeLink(Aarr, lowThreshold, x, y, w, h) {
@@ -23,7 +25,7 @@
             }
         }
     }
-    o.extend({
+    CGraph.extend({
         'canny': function (r) {
             this.grey().gauss(r);
             //振幅与相位数组
@@ -137,4 +139,4 @@
             return this;
         }
     });
-})(CGraph);
+})();

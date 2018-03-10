@@ -2,6 +2,8 @@
  * 作者: 阮家友
  * 时间: 2018-2-17 20:27:16
  */
+import CGraph from './CGraph';
+
 ; (function (o) {
     o.extend({
         'medianFilter': function (r) {

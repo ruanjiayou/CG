@@ -2,6 +2,8 @@
  * 作者: 阮家友
  * 时间: 2018-2-19 23:24:23
  */
+import CGraph from './CGraph';
+
 ; (function (o) {
     o.extend({
         'LineBlur': function (num) {

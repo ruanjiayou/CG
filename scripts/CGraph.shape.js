@@ -2,6 +2,8 @@
  * 作者: 阮家友
  * 时间: 2018-2-18 13:37:03
  */
+import CGraph from './CGraph';
+
 ; (function (o) {
     function draw_circle_8(p0, p) {
         let arr = [];

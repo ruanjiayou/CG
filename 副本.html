@@ -1,38 +1,89 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8"/>
-    <meta name="Author" content="阮家友"/>
-    <meta name="Keywords" content="HTML,model,test"/>
-    <meta name="Description" content="special effect model"/>
-    <meta name="time" content="2015-9-27 10:41:48"/>
-    <meta name="renderer" content="webkit"/>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"/>
-	<title>test</title>
-    <link rel="stylesheet" href="css/reset.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
     <script src="js/jquery.js"></script>
+    <script src="js/DropImage.js"></script>
     <script src="js/Core.js"></script>
-    <script src="js/CGraph.js"></script>
-    <script src="js/CColor.js"></script>
-    <style>
-        #center {padding:2rem;}
-    </style>
+    <script src="scripts/CGraph.js"></script>
+    <script src="scripts/CGraph.grey.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
 </head>
+
 <body>
-    <canvas id="oc" width="400" height="300"></canvas>
-<script>
-    var obj = new CCanvas("oc").proprety({
-        "stokeStyle": "#666",
-        "fillStyle": "#1f77b4",
-        "font": "16px Arial",
-        "textAlign": "center"
-    });
-    obj.load("images/yifei3.jpg",function(){
-        //this.drawLine({"x1":10,"y1":10,"x2":100,"y2":100}).this.each(this.medianFilter).render();
-        this.each(this.medianFilterRow);
-        this.appendA2B(this.createCanvas(this.mData),document.body);
-    });
-</script>
+    <div class="info">单击选择图片,或把图片拖到这里来！</div>
+    <script>
+        // 右键删除
+        Event.addEvent(document.body, 'contextmenu', function (evt) {
+            let o = evt.target;
+            if (o.nodeName.toLowerCase() === 'canvas') {
+                o.parentNode.removeChild(o);
+            }
+        });
+        // 拖拽效果
+        DropImage({
+            selector: ".info",
+            callback: function (src) {
+                new CGraph()
+                    .appendTo()
+                    .load(src, function () {
+                        this
+                            .clone()
+                            .grey()
+                            .render()
+                            .appendTo();
+                    });
+            }
+        });
+        // 鼠标画线
+        ; (function () {
+            let p0 = null;
+            graph.addEvent('mousedown', function (e) {
+                p0 = this.window2canvas(e.clientX, e.clientY);
+            });
+            graph.addEvent('mouseout', function (e) {
+                p0 = null;
+            });
+            graph.addEvent('mouseup', function (e) {
+                p0 = null;
+            });
+            graph.addEvent('mousemove', function (e) {
+                if (p0) {
+                    let p = this.window2canvas(e.clientX, e.clientY);
+                    this.drawLine(p0, p);
+                    p0 = p;
+                }
+            });
+        })();
+        // 键盘
+        document.onkeydown = function (evt) {
+            evt = (evt) ? evt : window.event;
+            switch (evt.keyCode) {
+                //case '': break;
+                default:
+                    graph.clear();
+                    graph.drawBezier(area);
+                    graph.drawText(evt.keyCode.toString(), { x: 10, y: 20 });
+                    break;
+            }
+            // evt.ctrlKey 
+            // if (evt.preventDeault)
+            //     evt.preventDeault();
+            // else
+            //     evt.returnValue = false;
+            // return false;
+        }
+    </script>
 </body>
+
 </html>

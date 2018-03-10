@@ -2,7 +2,10 @@
  * 作者: 阮家友
  * 时间: 2018-2-17 10:58:53
  */
-; (function (o) {
+import CGraph from './CGraph';
+
+
+; (function () {
     /**
      * 计算高斯权重系数-一维高斯算子
      * @param {number} radius - 半径
@@ -32,7 +35,7 @@
         }
         return resArr;
     }
-    o.extend({
+    CGraph.extend({
         'gauss': function (r) {
             let gs = getGaussArr(r), q;
             this.each(function (x, y) {
@@ -59,4 +62,4 @@
             return this;
         }
     });
-})(CGraph);
+})();
