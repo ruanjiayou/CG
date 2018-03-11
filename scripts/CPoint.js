@@ -26,15 +26,15 @@ class CPoint {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
     // 加法
-    add(p) {
-        this.x += p.x;
-        this.y += p.y;
+    add({ x, y }) {
+        this.x += x;
+        this.y += y;
         return this;
     }
     // 减法
-    substract(p) {
-        this.x -= p.x;
-        this.y -= p.y;
+    substract({ x, y }) {
+        this.x -= x;
+        this.y -= y;
         return this;
     }
     // 乘法
@@ -53,11 +53,11 @@ class CPoint {
         return this;
     }
     // 点乘
-    dot(p) {
-        return this.x * p.x + this.y * p.y;
+    dot({ x, y }) {
+        return this.x * x + this.y * y;
     }
     // 叉乘
-    // cross: function(p) {
+    // cross: function({ x, y }) {
     //     return 
     // }
 }

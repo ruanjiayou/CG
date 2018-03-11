@@ -1676,18 +1676,24 @@
 
 	    }, {
 	        key: "add",
-	        value: function add(p) {
-	            this.x += p.x;
-	            this.y += p.y;
+	        value: function add(_ref) {
+	            var x = _ref.x,
+	                y = _ref.y;
+
+	            this.x += x;
+	            this.y += y;
 	            return this;
 	        }
 	        // 减法
 
 	    }, {
 	        key: "substract",
-	        value: function substract(p) {
-	            this.x -= p.x;
-	            this.y -= p.y;
+	        value: function substract(_ref2) {
+	            var x = _ref2.x,
+	                y = _ref2.y;
+
+	            this.x -= x;
+	            this.y -= y;
 	            return this;
 	        }
 	        // 乘法
@@ -1715,11 +1721,14 @@
 
 	    }, {
 	        key: "dot",
-	        value: function dot(p) {
-	            return this.x * p.x + this.y * p.y;
+	        value: function dot(_ref3) {
+	            var x = _ref3.x,
+	                y = _ref3.y;
+
+	            return this.x * x + this.y * y;
 	        }
 	        // 叉乘
-	        // cross: function(p) {
+	        // cross: function({ x, y }) {
 	        //     return 
 	        // }
 

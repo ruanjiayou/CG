@@ -46,7 +46,7 @@
                 p.velocity = v || new CPoint(0, Math.random() * 10 + 30);
                 // 0.6-0.7
                 p.life = 3 * 1000;
-                p.expode = p.life * 0.5;
+                p.expode = p.life * 0.4 + p.life * Math.random() / 2;
                 p.age = age || 0;
                 // 色相随机
                 p.color = color || `hsla(${Math.random() * 360},100%,50%,1)`;
