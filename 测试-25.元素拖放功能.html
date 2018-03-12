@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>test</title>
+    <script src="js/jquery.js"></script>
+    <script src="js/DropImage.js"></script>
+    <script src="js/Core.js"></script>
+    <script src="dist/bundle.js"></script>
+    <link rel="stylesheet" href="./styles/common.css" />
+</head>
+
+<body>
+    <div class="info">单击选择图片,或把图片拖到这里来！</div>
+    <div>
+        <div id="side_left" style="float:left;width:50%;min-height:300px;background-color:blueviolet;"></div>
+        <div id="side_right" style="float:left;width:50%;min-height:300px;background-color:chartreuse;"></div>
+        <div style="clear:both;"></div>
+    </div>
+    <div id="testEdit" style="background-color:burlywood;">
+        <h2>标题</h2>
+        <p>内容</p>
+    </div>
+    <script>
+        // 右键删除
+        Event.addEvent(document.body, 'contextmenu', function (evt) {
+            let o = evt.target;
+            if (o.nodeName.toLowerCase() === 'canvas') {
+                o.parentNode.removeChild(o);
+            }
+        });
+        // 拖拽效果
+        DropImage({
+            selector: ".info",
+            callback: function (src) {
+                let g = new CGraph()
+                    .appendTo()
+                    .load(src, function () {
+                        enableDrag(this.mCanvas);
+                    });
+
+            }
+        });
+        function enableEdit(selector) {
+            let obj = $(selector)
+            obj.click(function () {
+                // 转为可编辑状态
+                $(this).attr('contenteditable', true);
+                // 自动focus
+                this.focus();
+                var range = window.getSelection();//创建range
+                range.selectAllChildren(this);//range 选择obj下所有子内容
+                range.collapseToEnd();//光标移至最后
+            });
+            obj.blur(function () {
+                $(this).attr('contenteditable', false);
+            });
+        }
+        enableDrag("#testEdit");
+        enableEdit('#testEdit>h2');
+        enableEdit('#testEdit>p');
+        enableDrop('#side_left');
+        enableDrop('#side_right');
+    </script>
+</body>
+
+</html>

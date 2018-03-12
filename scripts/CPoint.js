@@ -57,9 +57,9 @@ class CPoint {
         return this.x * x + this.y * y;
     }
     // 叉乘
-    // cross: function({ x, y }) {
-    //     return 
-    // }
+    cross({ x, y }) {
+        return this.x * y - this.y * x;
+    }
 }
 
 module.exports = CPoint;

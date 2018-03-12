@@ -51,3 +51,34 @@ function DropImage(data) {
         oinput.click();
     });
 }
+
+/**
+ * 使元素能放被拖动的元素
+ * @param {string} selector 
+ */
+function enableDrop(selector) {
+    let obj = $(selector);
+    obj.on('drop', function (evt) {
+        evt.originalEvent.preventDefault();
+        evt.originalEvent.stopPropagation();
+        let data = evt.originalEvent.dataTransfer.getData('Text');
+        $(evt.target).append($(data));
+    });
+    obj.on('dragover', function (evt) {
+        evt.preventDefault();
+    });
+}
+
+/**
+ * 使一个元素能被拖动
+ * @param {string} selector - 必须是id
+ */
+function enableDrag(selector) {
+    let obj = $(selector);
+    let ts = new Date().getTime();
+    let s = typeof selector === 'object' ? '[did=' + ts + ']' : selector + '[did=' + ts + ']';
+    obj.attr({ 'draggable': true, 'did': ts });
+    obj.on('dragstart', function (evt) {
+        evt.originalEvent.dataTransfer.setData('Text', s);
+    });
+}
