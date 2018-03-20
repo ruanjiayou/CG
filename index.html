@@ -18,6 +18,56 @@
     <script src="js/CGraph.js"></script>
     <script src="js/CColor.js"></script>
     <style>
+        ul {
+            padding-left: 0;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        /* 代码片: http://utils.jiayou.com/static/css3%E5%88%97%E8%A1%A8/css3%E5%88%97%E8%A1%A8.html */
+
+        .css3-list {
+            position: fixed;
+            left: 20px;
+            top: 70px;
+            width: 300px;
+            height: 80%;
+            counter-reset: linenumbera;
+            background-color: #eee;
+            border-left: 5px solid #558ABB;
+            overflow-y: hidden;
+        }
+
+        .css3-list:hover {
+            overflow-y: auto;
+        }
+
+        .css3-list li {
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .css3-list a {
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: block;
+        }
+
+        .css3-list a:before {
+            counter-increment: linenumbera;
+            display: inline-block;
+            width: 25px;
+            text-align: right;
+            height: 100%;
+            margin: 0 5px;
+            border-right: 1px solid #999;
+            padding-right: 5px;
+            content: " " counter(linenumbera) ". ";
+        }
+
         #center {
             padding: 2rem;
         }
@@ -27,7 +77,7 @@
 <body>
     <div id="center">
         <p>CGraph中用到了非零环绕、光栅化算法、贝塞尔曲线算法、</p>
-        <ul>
+        <ul class="css3-list">
             <li>
                 <a href="测试-1.图像灰化.html">测试-1.图像灰化</a>
             </li>
@@ -104,7 +154,7 @@
                 <a href="形态学/形态学-1.二值化.html">形态学-1.二值化</a>
             </li>
             <li>
-                <a href=".html"></a>
+                <a href="three.js/副本.html">3d.副本</a>
             </li>
             <li>
                 <a href=".html"></a>

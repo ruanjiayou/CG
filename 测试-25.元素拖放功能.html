@@ -53,15 +53,19 @@
         function enableEdit(selector) {
             let obj = $(selector)
             obj.click(function () {
-                // 转为可编辑状态
-                $(this).attr('contenteditable', true);
                 // 自动focus
-                this.focus();
-                var range = window.getSelection();//创建range
-                range.selectAllChildren(this);//range 选择obj下所有子内容
-                range.collapseToEnd();//光标移至最后
+                if (this.focused !== true) {
+                    // 转为可编辑状态
+                    $(this).attr('contenteditable', true);
+                    this.focus();
+                    var range = window.getSelection();//创建range
+                    range.selectAllChildren(this);//range 选择obj下所有子内容
+                    range.collapseToEnd();//光标移至最后
+                }
+                this.focused = true;
             });
             obj.blur(function () {
+                this.focused = false;
                 $(this).attr('contenteditable', false);
             });
         }

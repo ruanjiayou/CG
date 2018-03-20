@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="Author" content="阮家友" />
+    <meta name="Keywords" content="HTML,model,test" />
+    <meta name="Description" content="special effect model" />
+    <meta name="time" content="2015-9-27 10:41:48" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"
+    />
+    <title>3D</title>
+    <script src="../js/three.min.js"></script>
+    <script src="../js/three.helper.js"></script>
+    <script src="../js/jquery.js"></script>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script>
+        function Cube() {
+            return new THREE.Mesh(new THREE.CubeGeometry(100, 100, 100), new THREE.MeshNormalMaterial());
+        }
+        window.onload = function () {
+            var cg = new CGraph('#container');
+            var cube = Cube();
+            cube.rotation.x = 0.5;
+            cube.rotation.y = 0.5;
+            cg.add(cube).run(cube);
+
+            // 鼠标控制点
+            ; (function () {
+                let p0;
+                cg.addEvent('mousedown', function (e) {
+                    p0 = this.window2canvas(e.clientX, e.clientY);
+                });
+                cg.addEvent('mouseout', function (e) {
+                    p0 = null;
+                });
+                cg.addEvent('mouseup', function (e) {
+                    p0 = null;
+                });
+                cg.addEvent('mousemove', function (e) {
+                    if (p0) {
+                        let p = this.window2canvas(e.clientX, e.clientY);
+                        cube.rotation.x += (p.y - p0.y) * 0.01;
+                        cube.rotation.y += (p.x - p0.x) * 0.01;
+                        p0 = p;
+                    }
+                });
+            })();
+        }
+    </script>
+</body>
+
+</html>
